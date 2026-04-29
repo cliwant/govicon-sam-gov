@@ -32,6 +32,27 @@ bun add @govicon/sam-gov
 
 Requires Node.js ≥ 20 (native `fetch` + `AbortSignal.timeout`).
 
+### Pre-publish testing (private repo)
+
+While this package is still in private review, you can install it directly
+from the GitHub repo (the `prepare` script auto-runs `tsc` to build `dist/`):
+
+```bash
+# Requires `gh auth login` so npm can clone the private repo via HTTPS.
+npm install github:seungdo-keum/govicon-sam-gov
+# Or pin to a commit:
+npm install github:seungdo-keum/govicon-sam-gov#main
+```
+
+Or clone and run the included quickstart against live SAM.gov:
+
+```bash
+gh repo clone seungdo-keum/govicon-sam-gov
+cd govicon-sam-gov
+npm install
+npx tsx examples/quickstart.ts
+```
+
 ## Quickstart (keyless)
 
 ```ts
