@@ -26,7 +26,7 @@ const ENTITY_BASE = "https://api.sam.gov/entity-information/v3/entities";
 const PUBLIC_BASE = "https://sam.gov/api/prod";
 
 const DEFAULT_USER_AGENT =
-  "Mozilla/5.0 (compatible; @govicon/sam-gov; +https://github.com/seungdo-keum/govicon-sam-gov)";
+  "Mozilla/5.0 (compatible; @govicon/sam-gov; +https://github.com/cliwant/govicon-sam-gov)";
 
 export class SamGovClient {
   private readonly apiKey?: string;

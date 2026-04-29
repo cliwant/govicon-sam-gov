@@ -15,10 +15,10 @@
   ],
   "license": "MIT",
   "author": "GovIcon contributors",
-  "homepage": "https://github.com/seungdo-keum/govicon-sam-gov",
+  "homepage": "https://github.com/cliwant/govicon-sam-gov",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/seungdo-keum/govicon-sam-gov.git"
+    "url": "git+https://github.com/cliwant/govicon-sam-gov.git"
   },
   "type": "module",
   "main": "./dist/index.js",

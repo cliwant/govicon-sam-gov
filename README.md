@@ -39,10 +39,10 @@ is a pure copy — no TypeScript build needed in your project.
 
 ```bash
 # Requires `gh auth login` so npm can clone the private repo.
-npm install github:seungdo-keum/govicon-sam-gov
+npm install github:cliwant/govicon-sam-gov
 
 # Or pin to a specific commit / branch:
-npm install github:seungdo-keum/govicon-sam-gov#main
+npm install github:cliwant/govicon-sam-gov#main
 ```
 
 > ⚠️ **Windows note:** `npm install github:...` works for project deps
@@ -53,7 +53,7 @@ npm install github:seungdo-keum/govicon-sam-gov#main
 Or clone and run the included quickstart against live SAM.gov:
 
 ```bash
-gh repo clone seungdo-keum/govicon-sam-gov
+gh repo clone cliwant/govicon-sam-gov
 cd govicon-sam-gov
 npm install
 npx tsx examples/quickstart.ts
