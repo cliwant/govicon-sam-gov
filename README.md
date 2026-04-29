@@ -1,169 +1,48 @@
-# @govicon/sam-gov
+# ⚠️ This repository has moved
 
-> **Keyless** SAM.gov client for Node.js, browsers, MCP servers, and AI agents.
-> Search federal opportunities, look up entities, follow attachments — no API key required.
+> **Status:** Archived — code consolidated into [cliwant/govicon-mcp-sam-gov](https://github.com/cliwant/govicon-mcp-sam-gov).
 
-[한국어 README](./README.ko.md) · [日本語 README](./README.ja.md)
+The `@govicon/sam-gov` standalone library has been **merged into**
+[`@govicon/mcp-sam-gov`](https://github.com/cliwant/govicon-mcp-sam-gov),
+which is now the **canonical home** for all GovIcon federal-data work:
 
-## Why this exists
+- `SamGovClient` (the same class that lived here)
+- USAspending wrappers (22 functions across 5 categories)
+- Federal Register, eCFR, Grants.gov clients
+- 36-tool MCP server for AI agents
+- Claude Code plugin / Skill bundle
+- One-click `.mcpb` Claude Desktop Extension
 
-SAM.gov publishes federal opportunity data through two layers:
+## Migration
 
-1. The **authenticated v2 API** at `api.sam.gov` — requires registration, returns JSON,
-   higher rate limits, full historical archive.
-2. The **keyless public endpoints** at `sam.gov/api/prod/...` — the same data the
-   SAM.gov website renders for itself, accessible with `Accept: application/hal+json`.
-   No registration. Reasonable rate.
+Replace the old import path with the new package + subpath:
 
-`@govicon/sam-gov` wraps both behind one normalized client. Pass an API key if you
-have one (you'll get higher quota); skip it and the client uses the keyless layer
-transparently. Either way, the same `searchOpportunities` / `getOpportunity` /
-`fetchOpportunityDescription` API works.
-
-## Install
-
-```bash
-npm install @govicon/sam-gov
-# or
-pnpm add @govicon/sam-gov
-# or
-bun add @govicon/sam-gov
+```diff
+- import { SamGovClient } from "@govicon/sam-gov";
++ import { SamGovClient } from "@govicon/mcp-sam-gov/sam-gov";
 ```
 
-Requires Node.js ≥ 20 (native `fetch` + `AbortSignal.timeout`).
+The `SamGovClient` API is **unchanged**. All method signatures and types
+are identical — this is a pure repackaging, not a breaking API change.
 
-### Pre-publish testing (private repo)
+## Why the move
 
-`dist/` is pre-built and committed, so installing from the github repo
-is a pure copy — no TypeScript build needed in your project.
+When this repo started, we expected demand for a standalone client.
+Reality: every consumer also wants USAspending / Federal Register / eCFR
+/ Grants — i.e. the full federal-data surface. Maintaining two repos
+with overlapping code (the MCP server already vendored this client to
+work around npm's Windows git-dep bug) doubled the maintenance cost
+without serving any real consumer.
 
-```bash
-# Requires `gh auth login` so npm can clone the private repo.
-npm install github:cliwant/govicon-sam-gov
+Single repo, single npm package, single set of trilingual READMEs.
 
-# Or pin to a specific commit / branch:
-npm install github:cliwant/govicon-sam-gov#main
-```
+## See also
 
-> ⚠️ **Windows note:** `npm install github:...` works for project deps
-> (`npm install`, no `-g`). For **global** installs (`npm install -g`),
-> npm has a long-standing Windows bug with git-deps + symlinks. Prefer
-> clone-then-local for global installs (see `@govicon/mcp-sam-gov` README).
-
-Or clone and run the included quickstart against live SAM.gov:
-
-```bash
-gh repo clone cliwant/govicon-sam-gov
-cd govicon-sam-gov
-npm install
-npx tsx examples/quickstart.ts
-```
-
-## Quickstart (keyless)
-
-```ts
-import { SamGovClient } from "@govicon/sam-gov";
-
-const sam = new SamGovClient(); // no API key — uses public endpoints
-
-const result = await sam.searchOpportunities({
-  ncode: "541512",
-  limit: 5,
-});
-
-for (const o of result.opportunitiesData) {
-  console.log(`${o.noticeId} — ${o.title} (${o.fullParentPathName})`);
-}
-```
-
-## With an API key (higher rate limit + archives)
-
-```ts
-const sam = new SamGovClient({ apiKey: process.env.SAM_GOV_API_KEY });
-
-// Same calls — the client picks the authenticated path automatically.
-const r = await sam.searchOpportunities({ query: "cloud", limit: 10 });
-```
-
-## Get the full description body
-
-```ts
-const opp = await sam.getOpportunity("5ef3db5daeb54099a96d487783a38bd0");
-if (opp?.description) {
-  // Public path inlines the body directly; auth path returns a URL —
-  // `fetchOpportunityDescription` handles both shapes.
-  const text = await sam.fetchOpportunityDescription(opp.description);
-  console.log(text);
-}
-```
-
-## Embed live attachments
-
-The client returns canonical download URLs in `opportunity.resourceLinks`. Each
-URL returns a 303 redirect to a signed S3 URL — fetch with `redirect: "follow"`
-and you get the file bytes. Works in iframes for inline PDF / DOCX viewers.
-
-```ts
-const opp = await sam.getOpportunity(noticeId);
-for (const url of opp?.resourceLinks ?? []) {
-  // url is e.g. https://sam.gov/api/prod/opps/v3/opportunities/resources/files/{resourceId}/download
-  const file = await fetch(url, { redirect: "follow" });
-  // ...
-}
-```
-
-## API surface
-
-```ts
-class SamGovClient {
-  constructor(options?: {
-    apiKey?: string;
-    userAgent?: string;
-    fetch?: typeof fetch;
-    logger?: { warn?: (msg: string, err?: unknown) => void };
-  });
-
-  searchOpportunities(filters: SamSearchFilters): Promise<SamSearchResult>;
-  getOpportunity(noticeId: string): Promise<SamOpportunity | null>;
-  fetchOpportunityDescription(input: string): Promise<string>;
-
-  /** Requires an API key (no public mirror exists). */
-  searchEntities(query: string): Promise<EntitySearchResult>;
-
-  /** Build the public download URL from a resourceId. */
-  publicDownloadUrl(resourceId: string): string;
-}
-```
-
-Full `SamSearchFilters`, `SamOpportunity`, etc. types are exported from the
-package root.
-
-## Use cases
-
-- **AI agents / MCP servers**: drop-in tool for "search SAM.gov" without
-  forcing every user to provision their own key.
-- **Federal contracting SaaS**: stop maintaining your own SAM.gov client.
-  Three-tier fallback (auth → public → empty) is built in.
-- **Pricing engines / proposal tools**: pull current opportunities + their
-  attachments to ground RFP analysis.
-- **Compliance / capture tools**: enumerate active opportunities with
-  reasonable filters (NAICS, set-aside, agency, place of performance).
-
-## Limits
-
-- **Keyless rate**: SAM.gov throttles aggressive scraping. Be polite —
-  this library doesn't auto-retry under 429. Production callers should
-  wrap with their own rate limiter.
-- **Historical archive**: Keyless endpoints surface only "active" notices
-  (~12-month window). For older data, use an API key.
-- **Entity search**: There's no public mirror; you need a SAM.gov key.
+- [`cliwant/govicon-mcp-sam-gov`](https://github.com/cliwant/govicon-mcp-sam-gov) — the new home (PUBLIC)
+- [README in English](https://github.com/cliwant/govicon-mcp-sam-gov/blob/main/README.md)
+- [한국어 README](https://github.com/cliwant/govicon-mcp-sam-gov/blob/main/README.ko.md)
+- [日本語 README](https://github.com/cliwant/govicon-mcp-sam-gov/blob/main/README.ja.md)
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
-
-## Disclaimer
-
-This client wraps **publicly available** SAM.gov endpoints. It is not affiliated
-with the General Services Administration, SAM.gov, or any federal agency.
-SAM.gov data is in the public domain.
+MIT — same as before.
