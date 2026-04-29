@@ -34,15 +34,21 @@ Requires Node.js ≥ 20 (native `fetch` + `AbortSignal.timeout`).
 
 ### Pre-publish testing (private repo)
 
-While this package is still in private review, you can install it directly
-from the GitHub repo (the `prepare` script auto-runs `tsc` to build `dist/`):
+`dist/` is pre-built and committed, so installing from the github repo
+is a pure copy — no TypeScript build needed in your project.
 
 ```bash
-# Requires `gh auth login` so npm can clone the private repo via HTTPS.
+# Requires `gh auth login` so npm can clone the private repo.
 npm install github:seungdo-keum/govicon-sam-gov
-# Or pin to a commit:
+
+# Or pin to a specific commit / branch:
 npm install github:seungdo-keum/govicon-sam-gov#main
 ```
+
+> ⚠️ **Windows note:** `npm install github:...` works for project deps
+> (`npm install`, no `-g`). For **global** installs (`npm install -g`),
+> npm has a long-standing Windows bug with git-deps + symlinks. Prefer
+> clone-then-local for global installs (see `@govicon/mcp-sam-gov` README).
 
 Or clone and run the included quickstart against live SAM.gov:
 
