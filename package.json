@@ -1,0 +1,53 @@
+{
+  "name": "@govicon/sam-gov",
+  "version": "0.1.0",
+  "description": "Keyless SAM.gov client for Node.js, browsers, MCP servers, and AI agents — search opportunities, look up entities, follow attachments, no API key required.",
+  "keywords": [
+    "sam.gov",
+    "federal-contracting",
+    "govcon",
+    "fedspending",
+    "keyless",
+    "mcp",
+    "ai-agents",
+    "rfp",
+    "contracts"
+  ],
+  "license": "MIT",
+  "author": "GovIcon contributors",
+  "homepage": "https://github.com/seungdo-keum/govicon-sam-gov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seungdo-keum/govicon-sam-gov.git"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "translations",
+    "README.md",
+    "README.ko.md",
+    "README.ja.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test --test-reporter=spec",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.5.0"
+  }
+}
