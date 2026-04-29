@@ -41,7 +41,6 @@
   "scripts": {
     "build": "tsc",
     "test": "node --test --test-reporter=spec",
-    "prepare": "tsc",
     "prepublishOnly": "npm run build && npm test"
   },
   "engines": {
