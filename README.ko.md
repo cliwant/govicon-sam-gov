@@ -1,8 +1,8 @@
 # ⚠️ 이 레포는 이전되었습니다
 
-> **상태:** Archived — 코드는 [cliwant/govicon-mcp-sam-gov](https://github.com/cliwant/govicon-mcp-sam-gov) 로 통합.
+> **상태:** Archived — 코드는 [cliwant/mcp-sam-gov](https://github.com/cliwant/mcp-sam-gov) 로 통합.
 
-`@govicon/sam-gov` 단독 라이브러리는 **[`@govicon/mcp-sam-gov`](https://github.com/cliwant/govicon-mcp-sam-gov) 로 통합**되었습니다. 모든 GovIcon federal-data 작업의 정식 home:
+`@govicon/sam-gov` 단독 라이브러리는 **[`@cliwant/mcp-sam-gov`](https://github.com/cliwant/mcp-sam-gov) 로 통합**되었습니다. 모든 federal-data 작업의 정식 home:
 
 - `SamGovClient` (이 레포에 있던 동일 클래스)
 - USAspending 래퍼 (5개 카테고리 22개 함수)
@@ -17,7 +17,7 @@ import 경로만 변경:
 
 ```diff
 - import { SamGovClient } from "@govicon/sam-gov";
-+ import { SamGovClient } from "@govicon/mcp-sam-gov/sam-gov";
++ import { SamGovClient } from "@cliwant/mcp-sam-gov/sam-gov";
 ```
 
 `SamGovClient` API 는 **변경 없음**. 모든 메소드 / 타입 동일.
@@ -30,8 +30,8 @@ import 경로만 변경:
 
 ## 새 home
 
-- [`cliwant/govicon-mcp-sam-gov`](https://github.com/cliwant/govicon-mcp-sam-gov) — PUBLIC
-- [한국어 README](https://github.com/cliwant/govicon-mcp-sam-gov/blob/main/README.ko.md)
+- [`cliwant/mcp-sam-gov`](https://github.com/cliwant/mcp-sam-gov) — PUBLIC
+- [한국어 README](https://github.com/cliwant/mcp-sam-gov/blob/main/README.ko.md)
 
 ## 라이선스
 
